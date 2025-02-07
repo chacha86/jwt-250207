@@ -29,6 +29,8 @@ public class AuthTokenServiceTest {
     @Autowired
     private MemberService memberService;
 
+    SecretKey secretKey = Keys.hmacShaKeyFor("abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890".getBytes());
+
     @Test
     @DisplayName("AuthTokenService 생성")
     void init() {
@@ -39,8 +41,6 @@ public class AuthTokenServiceTest {
     @DisplayName("jwt 생성")
     void createToken() {
         int expireSeconds = 60 * 60 * 24 * 365;
-        SecretKey secretKey = Keys.hmacShaKeyFor("abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890".getBytes());
-
         Map<String, Object> originPayload = Map.of("name", "john", "age", 23);
 
         String jwtStr = Ut.Jwt.createToken(secretKey, expireSeconds, originPayload);
@@ -68,6 +68,16 @@ public class AuthTokenServiceTest {
         assertThat(accessToken).isNotBlank();
 
         System.out.println("accessToken = " + accessToken);
+    }
+
+    @Test
+    @DisplayName("jwt valid check")
+    void checkValid() {
+
+        Member member = memberService.findByUsername("user1").get();
+        String accessToken = authTokenService.genAccessToken(member);
+        boolean isValid = Ut.Jwt.isValidToken(secretKey, accessToken);
+        assertThat(isValid).isTrue();
     }
 
 }
