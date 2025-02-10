@@ -79,6 +79,4 @@ public class ApiV1MemberController {
                 new MemberDto(member)
         );
     }
-
-
 }
