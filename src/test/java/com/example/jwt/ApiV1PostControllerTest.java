@@ -68,7 +68,7 @@ public class ApiV1PostControllerTest {
 
     private void checkPosts(List<Post> posts, ResultActions resultActions) throws Exception {
 
-        for(int i = 0; i < posts.size(); i++) {
+        for (int i = 0; i < posts.size(); i++) {
 
             Post post = posts.get(i);
 
@@ -104,7 +104,7 @@ public class ApiV1PostControllerTest {
                 .andExpect(handler().methodName("getItems"))
                 .andExpect(jsonPath("$.code").value("200-1"))
                 .andExpect(jsonPath("$.msg").value("글 목록 조회가 완료되었습니다."))
-                .andExpect(jsonPath("$.data.items.length()").value( 3)) // 한페이지당 보여줄 글 개수
+                .andExpect(jsonPath("$.data.items.length()").value(3)) // 한페이지당 보여줄 글 개수
                 .andExpect(jsonPath("$.data.currentPageNo").isNumber()) // 현재 페이지
                 .andExpect(jsonPath("$.data.totalPages").isNumber()); // 전체 페이지 개수
 
@@ -537,4 +537,25 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.msg").value("자신이 작성한 글만 삭제 가능합니다."));
 
     }
+
+    @Test
+    @DisplayName("통계")
+    void statistics() throws Exception {
+        ResultActions resultActions = mvc.perform(
+                        get("/api/v1/posts/statistics")
+                )
+                .andDo(print());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostController.class))
+                .andExpect(handler().methodName("getStatistics"))
+                .andExpect(jsonPath("$.code").value("200-1"))
+                .andExpect(jsonPath("$.msg").value("통계 조회가 완료되었습니다."))
+                .andExpect(jsonPath("$.data.postCount").value(10))
+                .andExpect(jsonPath("$.data.postPublishedCount").value(10))
+                .andExpect(jsonPath("$.data.postListedCount").value(10));
+
+    }
+
 }
