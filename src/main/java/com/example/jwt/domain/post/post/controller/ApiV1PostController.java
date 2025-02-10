@@ -108,13 +108,14 @@ public class ApiV1PostController {
     @Transactional
     public RsData<PostWithContentDto> modify(@PathVariable long id, @RequestBody @Valid ModifyReqBody reqBody) {
 
-        Member actor = rq.getActor();
+        Member actor = rq.getActor(); // 야매
 
         Post post = postService.getItem(id).orElseThrow(
                 () -> new ServiceException("404-1", "존재하지 않는 글입니다.")
         );
 
         post.canModify(actor);
+
         postService.modify(post, reqBody.title(), reqBody.content());
 
         return new RsData<>(
