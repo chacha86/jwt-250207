@@ -105,7 +105,6 @@ public class ApiV1PostController {
     }
 
     @PutMapping("{id}")
-    @Transactional
     public RsData<PostWithContentDto> modify(@PathVariable long id, @RequestBody @Valid ModifyReqBody reqBody) {
 
         Member actor = rq.getActor();
