@@ -69,15 +69,13 @@ public class ApiV1MemberController {
 
         response.addCookie(accsessTokenCookie);
 
-        String authToken = memberService.getAuthToken(member);
-
         return new RsData<>(
                 "200-1",
                 "%s님 환영합니다.".formatted(member.getNickname()),
                 new LoginResBody(
                         new MemberDto(member),
                         member.getApiKey(),
-                        authToken
+                        accessToken
                 )
         );
     }
